@@ -1,23 +1,49 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import jsonData from './data/data.json';
+import Folder from './components/Folder';
+import Search from './components/Search';
 
 function App() {
+  const [toggle, setToggle] = useState(false)
+  const [adminData] = useState(jsonData)
+  
+  const handleToggle = () => {
+    setToggle(!toggle)
+  }
+
+  // const handleFolders = () => {
+  //   jsonData.filter(data => data.type === "folder").map(filteredFolder => (
+  //     filteredFolder.files?.map(file => {
+  //       console.log(file.name)
+  //       return (
+  //         <div key={file.id}>SubFile: {file.name}</div>
+  //       )
+  //     })
+  //   ))
+  // }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Search />
+      {jsonData.map((item, index) => {
+        return (
+          <>
+            <div key={index}>
+              <p>Name: {item.name} </p>
+              <p>File Type: {item.type}</p>
+              {item.files?.map(subItem => (
+              <p key={subItem.id}>SubFile: {subItem.name}</p>
+              ))}
+            </div>
+          </>
+        )
+      })}
+      <button onClick={handleToggle}>Open folders</button>
+      <div>
+        {toggle ? <Folder data={adminData} /> : ''}
+      </div>
+      
     </div>
   );
 }
